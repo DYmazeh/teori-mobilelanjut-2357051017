@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/main_page.dart';
 import 'package:myapp/register_page.dart';
+import 'package:myapp/user_model.dart';
 
 // Ini halaman buat user login.
 class LoginPage extends StatefulWidget {
@@ -14,12 +15,55 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   // Buat ngatur password keliatan atau enggak.
   bool _obscureText = true;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final List<User> _users = [];
 
   // Fungsi buat ganti ikon mata di password field.
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  void _login() {
+    try {
+      final user = _users.firstWhere(
+        (user) =>
+            user.email == _emailController.text &&
+            user.password == _passwordController.text,
+      );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => MainPage(user: user)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid email or password')),
+      );
+    }
+  }
+
+  void _navigateToRegisterPage() async {
+    final newUser = await Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const RegisterPage()),
+    );
+
+    if (newUser != null && newUser is User) {
+      setState(() {
+        _users.add(newUser);
+      });
+      if (!mounted) return;
+       ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration successful! Please log in.')),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -120,6 +164,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 8),
           // Field input email.
           TextFormField(
+            controller: _emailController,
             decoration: _buildInputDecoration(hintText: 'nama@email.com'),
             keyboardType: TextInputType.emailAddress,
           ),
@@ -128,6 +173,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 8),
           // Field input password.
           TextFormField(
+            controller: _passwordController,
             obscureText: _obscureText, // Sembunyiin atau tampilin password.
             decoration: _buildInputDecoration(
               hintText: '********',
@@ -144,12 +190,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 24),
           // Tombol buat masuk.
           ElevatedButton(
-            onPressed: () {
-              // Kalo berhasil, langsung lempar ke halaman utama.
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const MainPage()),
-              );
-            },
+            onPressed: _login,
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFF4511E), // Oranye cerah.
               minimumSize: const Size(double.infinity, 56),
@@ -202,11 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 // Kalo 'Daftar' diklik, pindah ke halaman registrasi.
                 recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const RegisterPage()),
-                    );
-                  },
+                  ..onTap = _navigateToRegisterPage,
               ),
             ],
           ),
