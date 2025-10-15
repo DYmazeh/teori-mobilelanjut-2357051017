@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid email or password')),
+        const SnackBar(content: Text('Email atau kata sandi salah')),
       );
     }
   }
@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       if (!mounted) return;
        ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Registration successful! Please log in.')),
+        const SnackBar(content: Text('Registrasi Berhasil! Silahkan masuk.')),
       );
     }
   }
