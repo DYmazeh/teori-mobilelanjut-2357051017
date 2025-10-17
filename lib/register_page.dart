@@ -37,7 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
     } else {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
+        const SnackBar(content: Text('Kata Sandi Tidak Sama')),
       );
     }
   }

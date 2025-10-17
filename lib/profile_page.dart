@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/login_page.dart';
 import 'package:myapp/user_model.dart';
 import 'package:provider/provider.dart';
 import 'package:myapp/favorites_provider.dart';
@@ -11,10 +10,7 @@ class ProfilePage extends StatelessWidget {
 
   // Fungsi untuk proses keluar
   void _logout(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-      (route) => false,
-    );
+    Navigator.of(context).pop();
   }
 
   @override

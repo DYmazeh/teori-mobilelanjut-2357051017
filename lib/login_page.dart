@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
             user.email == _emailController.text &&
             user.password == _passwordController.text,
       );
-      Navigator.of(context).pushReplacement(
+      Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => MainPage(user: user)),
       );
     } catch (e) {
