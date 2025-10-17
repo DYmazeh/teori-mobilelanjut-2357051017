@@ -117,17 +117,22 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  // Widget untuk membangun deretan chip kategori.
+  // Widget untuk membangun deretan chip kategori yang bisa di-scroll horizontal.
   Widget _buildCategoryChips() {
-    return Wrap(
-      spacing: 8.0, // Jarak horizontal antar chip.
-      runSpacing: 8.0, // Jarak vertikal antar baris chip.
-      children: <Widget>[
-        _buildChip('Sarapan'),
-        _buildChip('Makan Siang'),
-        _buildChip('Makan Malam'),
-        _buildChip('Cemilan'),
-      ],
+    final categories = ['Sarapan', 'Makan Siang', 'Makan Malam', 'Cemilan', 'Minuman', 'Kue'];
+
+    return SizedBox(
+      height: 40, // Memberikan tinggi tetap untuk ListView horizontal.
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 8.0), // Jarak antar chip.
+            child: _buildChip(categories[index]),
+          );
+        },
+      ),
     );
   }
 

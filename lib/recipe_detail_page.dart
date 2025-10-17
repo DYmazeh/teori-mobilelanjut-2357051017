@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:myapp/favorites_provider.dart';
@@ -95,33 +96,6 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> with TickerProvider
                 ),
               ),
             ),
-            SliverToBoxAdapter(
-              child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.recipe.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26, height: 1.2),
-                    ),
-                    const SizedBox(height: 20),
-                    Wrap(
-                      alignment: WrapAlignment.spaceBetween,
-                      runSpacing: 16.0,
-                      children: [
-                        _buildInfoColumn(Icons.star, widget.recipe.rating.toString(), 'Rating'),
-                        _buildInfoColumn(Icons.timer, '${widget.recipe.cookingTime} min', 'Waktu'),
-                        _buildInfoColumn(Icons.people_outline, '${widget.recipe.servings} orang', 'Porsi'),
-                        _buildInfoColumn(Icons.whatshot, widget.recipe.difficulty, 'Kesulitan'),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ),
             SliverPersistentHeader(
               delegate: _SliverAppBarDelegate(
                 TabBar(
@@ -152,10 +126,38 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> with TickerProvider
     );
   }
 
+  // Helper widget untuk konten header (Judul & Info)
+  Widget _buildHeaderContent() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.recipe.name,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 26, height: 1.2),
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            runSpacing: 16.0,
+            children: [
+              _buildInfoColumn(Icons.star, widget.recipe.rating.toString(), 'Rating'),
+              _buildInfoColumn(Icons.timer, '${widget.recipe.cookingTime} min', 'Waktu'),
+              _buildInfoColumn(Icons.people_outline, '${widget.recipe.servings} orang', 'Porsi'),
+              _buildInfoColumn(Icons.whatshot, widget.recipe.difficulty, 'Kesulitan'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildIngredientsTab() {
     return ListView(
       padding: const EdgeInsets.all(20.0),
       children: [
+        _buildHeaderContent(), // Memanggil header di dalam tab
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -225,26 +227,28 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> with TickerProvider
   }
 
   Widget _buildStepsTab() {
-    return ListView.builder(
+    return ListView(
       padding: const EdgeInsets.all(20.0),
-      itemCount: widget.recipe.steps.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                backgroundColor: const Color(0xFFFF6B00),
-                radius: 14,
-                child: Text('${index + 1}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(width: 12),
-              Expanded(child: Text(widget.recipe.steps[index], style: const TextStyle(fontSize: 16, height: 1.4))),
-            ],
-          ),
-        );
-      },
+      children: [
+        _buildHeaderContent(), // Memanggil header di dalam tab
+        ...List.generate(widget.recipe.steps.length, (index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  backgroundColor: const Color(0xFFFF6B00),
+                  radius: 14,
+                  child: Text('${index + 1}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Text(widget.recipe.steps[index], style: const TextStyle(fontSize: 16, height: 1.4))),
+              ],
+            ),
+          );
+        }),
+      ],
     );
   }
 
